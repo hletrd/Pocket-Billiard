@@ -1,6 +1,6 @@
 "use strict";
 var game;
-var version = 54;
+var version = 55;
 var pcount;
 var Game = function(width, height, ballsize, ctx, canvas_overlay, dpratio) {
 	this.width = width;
@@ -129,7 +129,7 @@ Game.prototype.touchEnd = function(event) {
 				game.balls[j].vx = (game.lines[touches[i].identifier].x1 - game.lines[touches[i].identifier].x2) * game.sensitivity;
 				game.balls[j].vy = (game.lines[touches[i].identifier].y1 - game.lines[touches[i].identifier].y2) * game.sensitivity;
 				game.lastdown = j;
-				//if (j != 3) game.status('No score');
+				if (j != 3 && j != 2) game.status('No score');
 				game.lines[touches[i].identifier] = null;
 				game.turn = (game.turn + 1) % pcount;
 				game.scoreavail = true;
@@ -172,7 +172,7 @@ Game.prototype.mouseUp = function(event) {
 		game.balls[game.mousedown].vx = (game.lines[-1000].x1 - game.lines[-1000].x2) * game.sensitivity;
 		game.balls[game.mousedown].vy = (game.lines[-1000].y1 - game.lines[-1000].y2) * game.sensitivity;
 		game.lastdown = game.mousedown;
-		//if (game.mousedown != 3) game.status('No score');
+		if (game.mousedown != 3 && game.mousedown != 2) game.status('No score');
 		game.lines[-1000] = null;
 		game.render();
 		game.mousedown = -1;
@@ -263,26 +263,26 @@ Game.prototype.refresh = function() {
 
 		if (game.balls[i].vx > 0) {
 			if (game.balls[i].vx - game.friction > 0) {
-				game.balls[i].vx -= game.friction;
+				game.balls[i].vx -= game.friction * (Math.random() * 0.2 + 0.9);
 			} else {
 				game.balls[i].vx = 0;
 			}
 		} else if (game.balls[i].vx < 0) {
 			if (game.balls[i].vx + game.friction < 0) {
-				game.balls[i].vx += game.friction;
+				game.balls[i].vx += game.friction * (Math.random() * 0.2 + 0.9);
 			} else {
 				game.balls[i].vx = 0;
 			}
 		}
 		if (game.balls[i].vy > 0) {
 			if (game.balls[i].vy - game.friction > 0) {
-				game.balls[i].vy -= game.friction;
+				game.balls[i].vy -= game.friction * (Math.random() * 0.2 + 0.9);
 			} else {
 				game.balls[i].vy = 0;
 			}
 		} else if (game.balls[i].vy < 0) {
 			if (game.balls[i].vy + game.friction < 0) {
-				game.balls[i].vy += game.friction;
+				game.balls[i].vy += game.friction * (Math.random() * 0.2 + 0.9);
 			} else {
 				game.balls[i].vy = 0;
 			}
@@ -433,18 +433,18 @@ Game.prototype.refresh = function() {
 					var ans_x = Math.sqrt(relative_move / (1 + ratio * ratio));
 					var ans_y = Math.sqrt(relative_move - ans_x * ans_x)
 					if (game.balls[i].x < game.balls[j].x) {
-						game.balls[i].x -= ans_x * (1.0 + Math.random() * 5);
-						game.balls[i].x += ans_x + (Math.random() * 5);
+						game.balls[i].x -= ans_x;// * (1.0 + Math.random() * 5);
+						game.balls[i].x += ans_x;// + (Math.random() * 5);
 					} else {
-						game.balls[i].x += ans_x + (Math.random() * 5);
-						game.balls[i].x -= ans_x + (Math.random() * 5);
+						game.balls[i].x += ans_x;// + (Math.random() * 5);
+						game.balls[i].x -= ans_x;// + (Math.random() * 5);
 					}
 					if (game.balls[i].y < game.balls[j].y) {
-						game.balls[i].y -= ans_y + (Math.random() * 5);
-						game.balls[j].y += ans_y + (Math.random() * 5);
+						game.balls[i].y -= ans_y;// + (Math.random() * 5);
+						game.balls[j].y += ans_y;// + (Math.random() * 5);
 					} else {
-						game.balls[i].y += ans_y + (Math.random() * 5);
-						game.balls[j].y -= ans_y + (Math.random() * 5);
+						game.balls[i].y += ans_y;// + (Math.random() * 5);
+						game.balls[j].y -= ans_y;// + (Math.random() * 5);
 					}
 				//}
 			}
@@ -455,10 +455,12 @@ Game.prototype.refresh = function() {
 
 Game.prototype.orientation = function(event) {
 	for(var i in game.balls) {
-		game.balls[i].vx += event.accelerationIncludingGravity.x * game.g;
-		game.balls[i].vy += event.accelerationIncludingGravity.y * -game.g;
-		game.balls[i].vx *= (0.95 + Math.random() * 0.1);
-		game.balls[i].vy *= (0.95 + Math.random() * 0.1);
+		if (Math.abs(event.accelerationIncludingGravity.x) < 3) game.balls[i].vx += event.accelerationIncludingGravity.x * game.g;
+		else game.balls[i].vx += 3 * game.g * (event.accelerationIncludingGravity.x / Math.abs(event.accelerationIncludingGravity.x));
+		if (Math.abs(event.accelerationIncludingGravity.y) < 3) game.balls[i].vy += event.accelerationIncludingGravity.y * -game.g;
+		else game.balls[i].vy += -3 * game.g * (event.accelerationIncludingGravity.y / Math.abs(event.accelerationIncludingGravity.y));
+		//if (event.accelerationIncludingGravity.x > 1) game.balls[i].vx *= (0.95 + Math.random() * 0.1);
+		//if (event.accelerationIncludingGravity.x > 1) game.balls[i].vy *= (0.95 + Math.random() * 0.1);
 	}
 	game.refresh();
 	//game.render();
@@ -466,7 +468,7 @@ Game.prototype.orientation = function(event) {
 
 Game.prototype.status = function(text) {
 	$("#status").remove();
-	$("<div/>", {id: 'status', html: text, style: 'position: absolute; width: 100%; z-index: 1000; height: 20%; top: 45%; font-family: "Apple SD Gothic Neo", "맑은 고딕"; text-align: center; font-size: 5em; color: white; -webkit-animation: statusf 0.3s normal forwards ease-in-out;'}).appendTo($('body'));
+	$("<div/>", {id: 'status', html: text, style: 'position: absolute; width: 100%; z-index: 1000; height: 20%; top: 45%; font-family: "Apple SD Gothic Neo", "맑은 고딕"; text-align: center; font-size: 5em; color: white; -webkit-animation: statusf 0.6s normal forwards ease-in-out;'}).appendTo($('body'));
 	setTimeout(function(){
 		$("#status").remove();
 	}, 500);
