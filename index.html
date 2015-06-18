@@ -5,13 +5,43 @@
 	<title>Pocket Billiards</title>
 	<script src="//0101010101.com/common/jquery2.js"></script>
 	<script src="run.js"></script>
+	<link rel="stylesheet" href="//0101010101.com/common/bootstrap-3.3.5/css/bootstrap.min.css">
+	<script src="//0101010101.com/common/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 	<style type="text/css">
 	body {
 		background-image: url("bg.jpg");
 		background-repeat: repeat;
 	}
+	@keyframes statusf {
+		from {
+			transform: scale(1, 1);
+			opacity: 1;
+		}
+		50% {
+			opacity: 1;
+		}
+		to {
+			transform: scale(2, 2);
+			opacity: 0;
+		}
+	}
 	</style>
 </head>
 <body>
+<div class="modal fade" id="modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="myModalLabel">Set player count</h4>
+			</div>
+			<div class="modal-body">
+				<input type="number" value="2" min="1" max="4" class="form-control" id="pcount">
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-primary btn-lg" onclick="load()">Start</button>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>
