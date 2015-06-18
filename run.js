@@ -1,6 +1,6 @@
 "use strict";
 var game;
-var version = 53;
+var version = 54;
 var pcount;
 var Game = function(width, height, ballsize, ctx, canvas_overlay, dpratio) {
 	this.width = width;
@@ -129,7 +129,7 @@ Game.prototype.touchEnd = function(event) {
 				game.balls[j].vx = (game.lines[touches[i].identifier].x1 - game.lines[touches[i].identifier].x2) * game.sensitivity;
 				game.balls[j].vy = (game.lines[touches[i].identifier].y1 - game.lines[touches[i].identifier].y2) * game.sensitivity;
 				game.lastdown = j;
-				if (j != 3) game.status('No score');
+				//if (j != 3) game.status('No score');
 				game.lines[touches[i].identifier] = null;
 				game.turn = (game.turn + 1) % pcount;
 				game.scoreavail = true;
@@ -172,7 +172,7 @@ Game.prototype.mouseUp = function(event) {
 		game.balls[game.mousedown].vx = (game.lines[-1000].x1 - game.lines[-1000].x2) * game.sensitivity;
 		game.balls[game.mousedown].vy = (game.lines[-1000].y1 - game.lines[-1000].y2) * game.sensitivity;
 		game.lastdown = game.mousedown;
-		if (game.mousedown != 3) game.status('No score');
+		//if (game.mousedown != 3) game.status('No score');
 		game.lines[-1000] = null;
 		game.render();
 		game.mousedown = -1;
