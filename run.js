@@ -569,7 +569,7 @@ var load = function() {
 	canvas_overlay.css('position', 'absolute');
 	canvas_overlay.css('z-index', '2');
 
-	$("<div/>", {id: 'player', html: '', style: 'position: absolute; width: 100%; z-index: 1; height: 20%; top: 0%; font-family: "Apple SD Gothic Neo", "맑은 고딕"; font-size: 1.5em; color: white; -webkit-animation: statusf 0.3s normal forwards ease-in-out;'}).appendTo($('body'));
+	$("<div/>", {id: 'player', html: '', style: 'position: absolute; width: 100%; z-index: 1; height: 20%; top: 0%; font-family: "Apple SD Gothic Neo", "맑은 고딕"; font-size: 1.5em; color: white;'}).appendTo($('body'));
 
 	game = new Game(cwidth * window.devicePixelRatio, cheight * window.devicePixelRatio, 50, ctx, canvas_overlay, window.devicePixelRatio);
 	game.render();
